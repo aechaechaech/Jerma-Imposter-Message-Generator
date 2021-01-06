@@ -67,10 +67,14 @@ bootleg_x_dict = {
 # input_string = input("Your message here: ").lower()
 # input_string = input_string.replace(":flushed:", "😳")
 
-from flask import Flask
+from flask import Flask, jsonify
+from flask_cors import CORS, cross_origin
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/api/<string:input_string>', methods=['GET'])
+@cross_origin()
 def get_input_string(input_string):
 	new_barcode = Image.new('RGB', (len(input_string)*12, master_im.height))
 	total_width = 0
@@ -119,7 +123,7 @@ def get_input_string(input_string):
 	img_string = str(img_str)
 	img_string = img_string[:-1]
 	img_string = img_string[2:]
-	return "data:image/jpeg;base64," + img_string
+	return jsonify({'image': "data:image/jpeg;base64," + img_string})
 
 if __name__ == "__main__":
     app.run()
