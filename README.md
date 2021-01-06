@@ -12,4 +12,4 @@ Only supports the charecters " ", !, a, b, c, d, e, h, i, m, n, o, p, q, r, s, t
 2. Run ```python main.py```
 3. Enter your message and watch the freaking magic happen baby
 
-Note: to use "😳" enter :flushed: into the message input.
+Note: to use "😳" enter ```:flushed:``` into the message input.
