@@ -1,6 +1,7 @@
 from PIL import Image, ImageDraw
 import random
 import base64
+import os
 from io import BytesIO
 
 # this codebase is FUCKED
@@ -126,5 +127,5 @@ def get_input_string(input_string):
 	return jsonify({'image': "data:image/jpeg;base64," + img_string})
 
 if __name__ == "__main__":
-	port = int(os.environ.get("PORT", 5000))
-    app.run(threaded=True, port=port)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
