@@ -113,7 +113,7 @@ function removeImageBlanks(imageObject) {
 
 const userAction = async (inputText) => {
   console.log(inputText);
-  const response = await fetch('http://sustext.herokuapp.com/api/' + inputText, {
+  const response = await fetch('//sustext.herokuapp.com/api/' + inputText, {
 	method: 'GET',
 	headers: {
 	  'Content-Type': 'application/json'
