@@ -7,6 +7,7 @@ Only supports the charecters " ", !, a, b, c, d, e, h, i, m, n, o, p, q, r, s, t
 1. Download and install python from [python.org](https://www.python.org/)
 2. When installing make sure to check off "Add python to PATH"
 3. Download the main.py file
+4. Run ```pip install Pillow``` in a command prompt/terminal
 
 # Usage
 1. Open up a command prompt/terminal wherever you downloaded the main.py file
