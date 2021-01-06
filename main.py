@@ -1,5 +1,7 @@
 from PIL import Image, ImageDraw
 import random
+import base64
+from io import BytesIO
 
 # this codebase is FUCKED
 
@@ -62,50 +64,62 @@ bootleg_x_dict = {
     ":flushed:": [289,312]
 }"""
 
-input_string = input("Your message here: ").lower()
-input_string = input_string.replace(":flushed:", "😳")
+# input_string = input("Your message here: ").lower()
+# input_string = input_string.replace(":flushed:", "😳")
 
-new_barcode = Image.new('RGB', (len(input_string)*12, master_im.height))
-total_width = 0
+from flask import Flask
+app = Flask(__name__)
 
-emoticon_processing = False
+@app.route('/api/<string:input_string>', methods=['GET'])
+def get_input_string(input_string):
+	new_barcode = Image.new('RGB', (len(input_string)*12, master_im.height))
+	total_width = 0
 
-for i in input_string:
-    if i in master_x_dict.keys():
-        x_coords = master_x_dict[i][random.randint(0, len(master_x_dict[i]) - 1)]
-        scan_line = master_im.crop((x_coords[0], 0, x_coords[1], master_im.height))
-        new_barcode.paste(scan_line, (total_width, 0))
-        total_width += scan_line.width
-    elif i in bootleg_x_dict.keys():   
-        x_coords = bootleg_x_dict[i][1]
-        
-        letter = master_im.crop((x_coords[0], 0, x_coords[1], y_coord_split))
-        face = master_im.crop((x_coords[0], y_coord_split, x_coords[1], master_im.height))
+	emoticon_processing = False
 
-        # flip over x?
-        if bootleg_x_dict[i][0][0]:
-            letter = letter.transpose(Image.FLIP_LEFT_RIGHT)
-            face = face.transpose(Image.FLIP_LEFT_RIGHT)
+	for i in input_string:
+		if i in master_x_dict.keys():
+			x_coords = master_x_dict[i][random.randint(0, len(master_x_dict[i]) - 1)]
+			scan_line = master_im.crop((x_coords[0], 0, x_coords[1], master_im.height))
+			new_barcode.paste(scan_line, (total_width, 0))
+			total_width += scan_line.width
+		elif i in bootleg_x_dict.keys():   
+			x_coords = bootleg_x_dict[i][1]
+			
+			letter = master_im.crop((x_coords[0], 0, x_coords[1], y_coord_split))
+			face = master_im.crop((x_coords[0], y_coord_split, x_coords[1], master_im.height))
 
-        # flip over y?
-        if bootleg_x_dict[i][0][1]:
-            letter = letter.transpose(Image.FLIP_TOP_BOTTOM)
-            face = face.transpose(Image.FLIP_TOP_BOTTOM)
+			# flip over x?
+			if bootleg_x_dict[i][0][0]:
+				letter = letter.transpose(Image.FLIP_LEFT_RIGHT)
+				face = face.transpose(Image.FLIP_LEFT_RIGHT)
 
-        # epic edge case
-        if i == "a":
-            draw = ImageDraw.Draw(letter)
-            draw.rectangle([5, 13, 8, 16], fill=(255,255,255,255))
-        
+			# flip over y?
+			if bootleg_x_dict[i][0][1]:
+				letter = letter.transpose(Image.FLIP_TOP_BOTTOM)
+				face = face.transpose(Image.FLIP_TOP_BOTTOM)
 
-        scan_line = Image.new('RGB', (letter.width, letter.height + face.height))
-        scan_line.paste(letter, (0, 0))
-        scan_line.paste(face, (0, y_coord_split))
-        new_barcode.paste(scan_line, (total_width, 0))
-        total_width += scan_line.width
+			# epic edge case
+			if i == "a":
+				draw = ImageDraw.Draw(letter)
+				draw.rectangle([5, 13, 8, 16], fill=(255,255,255,255))
+			
 
-    else:
-        print(i + ": LETTER NOT SUPPORTED")
-    
+			scan_line = Image.new('RGB', (letter.width, letter.height + face.height))
+			scan_line.paste(letter, (0, 0))
+			scan_line.paste(face, (0, y_coord_split))
+			new_barcode.paste(scan_line, (total_width, 0))
+			total_width += scan_line.width
 
-new_barcode.show()
+		else:
+			print(i + ": LETTER NOT SUPPORTED")
+	buffered = BytesIO()
+	new_barcode.save(buffered, format="JPEG")
+	img_str = base64.b64encode(buffered.getvalue())
+	img_string = str(img_str)
+	img_string = img_string[:-1]
+	img_string = img_string[2:]
+	return "data:image/jpeg;base64," + img_string
+
+if __name__ == "__main__":
+    app.run()
