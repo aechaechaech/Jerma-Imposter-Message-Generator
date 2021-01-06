@@ -126,4 +126,5 @@ def get_input_string(input_string):
 	return jsonify({'image': "data:image/jpeg;base64," + img_string})
 
 if __name__ == "__main__":
-    app.run(threaded=True, port=5000)
+	port = int(os.environ.get("PORT", 5000))
+    app.run(threaded=True, port=port)
