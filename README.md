@@ -14,3 +14,6 @@ Only supports the charecters " ", !, a, b, c, d, e, h, i, m, n, o, p, q, r, s, t
 3. Enter your message and watch the freaking magic happen baby
 
 Note: to use "😳" enter ```:flushed:``` into the message input.
+
+
+![](https://i.imgur.com/txRMUHa.gif)
