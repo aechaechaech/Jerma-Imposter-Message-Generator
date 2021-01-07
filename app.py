@@ -77,9 +77,48 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
+# Just a heads up, the list of blocked words are below here
+# There aren't too many but it could be triggering for some people
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# This is not an invitation to attempt to get around the word filter
+# I added this because I thought about how awful I would feel if Jerma's face became associated with these words
+# Please, for Jerma's sake, make your edgy jokes somewhere else
+blockedWords = [" coon", "nigger", "negro", "nigga", "rape", "retard", "tranny", "kike"]
+
 @app.route('/api/<string:input_string>/<int:cypher_mode>/<int:cheating_mode>', methods=['GET'])
 @cross_origin()
 def get_input_string(input_string, cypher_mode, cheating_mode):
+	if(any(blockedWords in input_string for blockedWords in blockedWords)):
+		return "nope"
+	
 	if cypher_mode == 1:
 		cypher_mode = True
 	else:
@@ -178,4 +217,4 @@ def get_input_string(input_string, cypher_mode, cheating_mode):
 	
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='127.0.0.1', port=port)
