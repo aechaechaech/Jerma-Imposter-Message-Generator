@@ -6,7 +6,7 @@ function search() {
 		if(substringsArray.some(substring=>document.getElementById('usernameInput').value.slice(-1).includes(substring)))
 		{
 			document.getElementById("imposter").style.opacity = "0";
-			userAction(document.getElementById('usernameInput').value);
+			// userAction(document.getElementById('usernameInput').value);
 			// console.log("valid jerma venus");
 			// break;
 		} else {
