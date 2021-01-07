@@ -120,7 +120,6 @@ img {
 	padding: 1em;
 	display: none;
 }
-.options > #cypher:hover ~ #options-help-cypher { display: flex; }
 
 #options-help-cheating {
 	font-size: 1em;
@@ -131,4 +130,5 @@ img {
 
 input[type="checkbox"]{
   transform: scale(2);
+  height: auto;
 }
