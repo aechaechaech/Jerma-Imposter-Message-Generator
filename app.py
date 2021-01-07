@@ -93,7 +93,7 @@ def get_input_string(input_string, cypher_mode, cheating_mode):
 	input_string = input_string.replace(":flushed:", "😳")
 
 	# font creation for cheating mode
-	font_path = (os.getcwd() + "\\arial.ttf")
+	font_path = (os.getcwd() + "./arial.ttf")
 	font = ImageFont.truetype(font_path, 13)
 
 	# cypher warning
