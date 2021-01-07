@@ -92,3 +92,43 @@ img {
 	transition: opacity 0.5s ease;
 	display:none;
 }
+
+.options {
+	font-size: 2em;
+	font-family: 'Open Sans', sans-serif;
+	display: flex;
+	align-items: center;
+	position: relative;
+}
+
+.options-container {
+	position: absolute;
+    top: 0;
+    padding: 1em;
+	height: auto;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.options  > *{
+}
+
+#options-help-cypher {
+	font-size: 1em;
+	font-family: 'Open Sans', sans-serif;
+	padding: 1em;
+	display: none;
+}
+.options > #cypher:hover ~ #options-help-cypher { display: flex; }
+
+#options-help-cheating {
+	font-size: 1em;
+	font-family: 'Open Sans', sans-serif;
+	padding: 1em;
+	display: none;
+}
+
+input[type="checkbox"]{
+  transform: scale(2);
+}

@@ -1,7 +1,7 @@
 ﻿var substringsArray = [' ','!', 'a', 'b', 'c', 'd', 'e', 'h', 'i', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', '😳', '򜰀🐀', '🐀򜰀', '򜰀', '🐀', '🐀'];
 
 function search() {
-	if(document.getElementById('usernameInput').value.length > 0 && document.getElementById('usernameInput').value.slice(-2) != '😳')
+	if(document.getElementById('usernameInput').value.length > 0 && document.getElementById('usernameInput').value.slice(-2) != '😳' && document.getElementById("cheating").checked != true)
 	{
 		if(substringsArray.some(substring=>document.getElementById('usernameInput').value.slice(-1).includes(substring)))
 		{
@@ -113,7 +113,20 @@ function removeImageBlanks(imageObject) {
 
 const userAction = async (inputText) => {
   console.log(inputText);
-  const response = await fetch('https://sustext.herokuapp.com/api/' + inputText, {
+  if (document.getElementById("cypher").checked) {
+	var cypherMode = 1;
+  }
+  else {
+	var cypherMode = 0;
+  }  
+  
+  if (document.getElementById("cheating").checked) {
+	var cheatingMode = 1;
+  }
+  else {
+	var cheatingMode = 0;
+  }
+  const response = await fetch('https://sustext.herokuapp.com/api/' + inputText + "/" + cypherMode + "/" + cheatingMode, {
 	method: 'GET',
 	headers: {
 	  'Content-Type': 'application/json'
@@ -136,3 +149,19 @@ const userAction = async (inputText) => {
 }
 
 // userAction("asdasdsd");
+
+
+function show_cheating() {
+	document.getElementById("options-help-cheating").style.display = "flex";
+}
+
+function hide_cheating() {
+	document.getElementById("options-help-cheating").style.display = "none";
+}
+function show_cypher() {
+	document.getElementById("options-help-cypher").style.display = "flex";
+}
+
+function hide_cypher() {
+	document.getElementById("options-help-cypher").style.display = "none";
+}
