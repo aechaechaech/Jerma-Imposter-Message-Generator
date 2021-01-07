@@ -2,6 +2,7 @@ from PIL import Image, ImageDraw, ImageFont
 import random, os
 import base64
 from io import BytesIO
+import matplotlib.font_manager as fm # to create font
 
 # this codebase is FUCKED
 
@@ -93,9 +94,8 @@ def get_input_string(input_string, cypher_mode, cheating_mode):
 	input_string = input_string.replace(":flushed:", "😳")
 
 	# font creation for cheating mode
-	font_path = (os.getcwd() + "\arial.ttf")
-	font = ImageFont.truetype(font_path, 13)
-
+	font = ImageFont.truetype(fm.findfont(fm.FontProperties(family='Arial')),13)
+	
 	# cypher warning
 	change = False
 	if cheating_mode and cypher_mode:
