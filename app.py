@@ -111,7 +111,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # This is not an invitation to attempt to get around the word filter
 # I added this because I thought about how awful I would feel if Jerma's face became associated with these words
 # Please, for Jerma's sake, make your edgy jokes somewhere else
-blockedWords = [" coon", "nigger", "negro", "nigga", "rape", "retard", "tranny", "kike"]
+blockedWords = [" coon", "nigger", "trannies", "nigga", "rape", "retard", "tranny", "kike"]
 
 @app.route('/api/<string:input_string>/<int:cypher_mode>/<int:cheating_mode>', methods=['GET'])
 @cross_origin()
