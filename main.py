@@ -114,7 +114,7 @@ total_width = 0
 
 for char in input_string:
     if char in master_x_dict.keys():
-        x_coords = master_x_dict[char][random.randint(0, len(master_x_dict[char]) - 1)]
+        x_coords = random.choice(master_x_dict[char])
 
         letter = master_im.crop((x_coords[0], 0, x_coords[1], y_coord_split))
         face = master_im.crop((x_coords[0], y_coord_split, x_coords[1], master_im.height))
