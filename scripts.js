@@ -126,7 +126,7 @@ const userAction = async (inputText) => {
   else {
 	var cheatingMode = 0;
   }
-  const response = await fetch('https://sustext.herokuapp.com/api/' + inputText + "/" + cypherMode + "/" + cheatingMode, {
+  const response = await fetch('https://sustext2.herokuapp.com/api/' + inputText + "/" + cypherMode + "/" + cheatingMode, {
 	method: 'GET',
 	headers: {
 	  'Content-Type': 'application/json'
