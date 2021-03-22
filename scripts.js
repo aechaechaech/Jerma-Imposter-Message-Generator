@@ -1,154 +1,25 @@
 ﻿var substringsArray = [' ','!', 'a', 'b', 'c', 'd', 'e', 'h', 'i', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'w', '😳', '򜰀🐀', '🐀򜰀', '򜰀', '🐀', '🐀'];
 
-function search() {
-	if(document.getElementById('usernameInput').value.length > 0 && document.getElementById('usernameInput').value.slice(-2) != '😳' && document.getElementById("cheating").checked != true)
-	{
-		if(substringsArray.some(substring=>document.getElementById('usernameInput').value.slice(-1).includes(substring)))
-		{
-			document.getElementById("imposter").style.opacity = "0";
-			// userAction(document.getElementById('usernameInput').value);
-			// console.log("valid jerma venus");
-			// break;
-		} else {
-			console.log("invalid monkuh ess" + document.getElementById('usernameInput').value.slice(-1))
-			document.getElementById("error-message").innerHTML = "Ooops! " + document.getElementById('usernameInput').value.slice(-1) + " is not a valid character.";
-			document.getElementById('usernameInput').value = document.getElementById('usernameInput').value.substring(0, document.getElementById('usernameInput').value.length - 1);
-			document.getElementById("error-message").style.opacity = "1";
-			setTimeout(function(){ 
-				document.getElementById("error-message").style.opacity = "0";
-			}, 1000);
-		}
-	}
+masterXDict = {
+    "w": [[7,29]],
+    "h": [[29,43], [83,98]],
+    "e": [[43,56], [98,111], [192,205]],
+    "n": [[56,69]],
+    " ": [[69,75], [111,116], [213,220], [238,244]],
+    "t": [[75,83], [183,192]],
+    "i": [[116,122], [220,225]],
+    "m": [[122,143]],
+    "p": [[143,157]],
+    "o": [[157,171]],
+    "s": [[171,183], [225,238], [244,257], [270,283]],
+    "r": [[205,213]],
+    "u": [[257,270]],
+    "!": [[282,289]],
+    "😳": [[289,312]],
 }
 
-/*
-    Source: http://jsfiddle.net/ruisoftware/ddZfV/7/
-    Updated by: Mohammad M. AlBanna
-    Website: MBanna.info 
-    Facebook: FB.com/MBanna.info
-*/
 
-//-----------------------------------------//
-function removeImageBlanks(imageObject) {
-    imgWidth = imageObject.width;
-    imgHeight = imageObject.height;
-    var canvas = document.createElement('canvas');
-    canvas.setAttribute("width", imgWidth);
-    canvas.setAttribute("height", imgHeight);
-    var context = canvas.getContext('2d');
-    context.drawImage(imageObject, 0, 0);
 
-    var imageData = context.getImageData(0, 0, imgWidth, imgHeight),
-        data = imageData.data,
-        getRBG = function(x, y) {
-            var offset = imgWidth * y + x;
-            return {
-                red:     data[offset * 4],
-                green:   data[offset * 4 + 1],
-                blue:    data[offset * 4 + 2],
-                opacity: data[offset * 4 + 3]
-            };
-        },
-        isWhite = function (rgb) {
-            // many images contain noise, as the white is not a pure #fff white
-            return rgb.red < 10 && rgb.green < 10 && rgb.blue < 10;
-        },
-                scanY = function (fromTop) {
-        var offset = fromTop ? 1 : -1;
-
-        // loop through each row
-        for(var y = fromTop ? 0 : imgHeight - 1; fromTop ? (y < imgHeight) : (y > -1); y += offset) {
-
-            // loop through each column
-            for(var x = 0; x < imgWidth; x++) {
-                var rgb = getRBG(x, y);
-                if (!isWhite(rgb)) {
-                    if (fromTop) {
-                        return y;
-                    } else {
-                        return Math.min(y + 1, imgHeight);
-                    }
-                }
-            }
-        }
-        return null; // all image is white
-    },
-    scanX = function (fromLeft) {
-        var offset = fromLeft? 1 : -1;
-
-        // loop through each column
-        for(var x = fromLeft ? 0 : imgWidth - 1; fromLeft ? (x < imgWidth) : (x > -1); x += offset) {
-
-            // loop through each row
-            for(var y = 0; y < imgHeight; y++) {
-                var rgb = getRBG(x, y);
-                if (!isWhite(rgb)) {
-                    if (fromLeft) {
-                        return x;
-                    } else {
-                        return Math.min(x + 1, imgWidth);
-                    }
-                }      
-            }
-        }
-        return null; // all image is white
-    };
-
-    var cropTop = scanY(true),
-        cropBottom = scanY(false),
-        cropLeft = scanX(true),
-        cropRight = scanX(false),
-        cropWidth = cropRight - cropLeft,
-        cropHeight = cropBottom - cropTop;
-
-    canvas.setAttribute("width", cropWidth);
-    canvas.setAttribute("height", cropHeight);
-    // finally crop the guy
-    canvas.getContext("2d").drawImage(imageObject,
-        cropLeft, cropTop, cropWidth, cropHeight,
-        0, 0, cropWidth, cropHeight);
-
-    return canvas.toDataURL();
-}
-
-const userAction = async (inputText) => {
-  console.log(inputText);
-  if (document.getElementById("cypher").checked) {
-	var cypherMode = 1;
-  }
-  else {
-	var cypherMode = 0;
-  }  
-  
-  if (document.getElementById("cheating").checked) {
-	var cheatingMode = 1;
-  }
-  else {
-	var cheatingMode = 0;
-  }
-  const response = await fetch('https://sustext2.herokuapp.com/api/' + inputText + "/" + cypherMode + "/" + cheatingMode, {
-	method: 'GET',
-	headers: {
-	  'Content-Type': 'application/json'
-	}
-  });
-  const myJson = await response.json(); //extract JSON from the http response
-  // console.log(myJson);
-	var myImage = new Image();
-	myImage.crossOrigin = "Anonymous";
-	myImage.onload = function(){
-		
-		document.getElementById("imposter").src = removeImageBlanks(myImage)
-	}
-	myImage.src = myJson.image;
-	document.getElementById("input-container-container").style.transform = "translate(0%, 15vh)";
-	document.getElementById("imposter").style.display = "flex";
-	setTimeout(function(){ 
-		document.getElementById("imposter").style.opacity = "1";
-	}, 1000);
-}
-
-// userAction("asdasdsd");
 
 
 function show_cheating() {
