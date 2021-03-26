@@ -30,6 +30,11 @@ const bootlegXDict = {
 // the y coord where text and face meet
 const yCoordSplit = 22;
 
+let cypherMode = false;
+let cheatingMode = false;
+const cypherBox = document.getElementById("cypher");
+const cheatBox = document.getElementById("cheating");
+
 const canvas = document.getElementById("sustext");
 const ctx = canvas.getContext("2d");
 
@@ -91,6 +96,10 @@ setInterval( function() {
     susMsg = susMsg.toLowerCase();
     susMsg = susMsg.split("");
 
+    cheatingMode = cheatBox.checked;
+    cheatingMode = true;
+    cypherMode = cypherBox.checked;
+
     // yell at user for using bad letters
     
     let processedMsg = [];
@@ -104,33 +113,32 @@ setInterval( function() {
         }
     }
 
-    if (unknownLetters.length > 0) {
+    if (unknownLetters.length > 0 && !cheatingMode) {
         errorOutput.innerHTML = `Hey dumbass, default mode doesnt support ${unknownLetters}`;
     } else {
         errorOutput.innerHTML = "";
     }
 
-    susMsg = processedMsg;
-
     // get and set width, this is a dumb way to do it but i cant think of a better way to do it
     let totalWidth = getWidth(susMsg);
 
     const newWidth = (50*totalWidth)/320;
-    canvas.style.width = `${newWidth}%`;
+    //canvas.style.width = `${newWidth}%`;
 
     canvas.width = totalWidth;
+    canvas.width = 320;
 
     // make it
     totalWidth = 0;
     width = 0;
     let flipArr = [];
-    for (const char of susMsg) {
-        if (char in masterXDict) {
+    for (const char of susMsg ) {
+        if (char in masterXDict && false) {
             x_coords = masterXDict[char]
             width = x_coords[1] - x_coords[0]
 
             ctx.drawImage(templateImage, x_coords[0], 0, width, canvas.height, totalWidth, 0 , width, canvas.height);
-        } else if (char in bootlegXDict) {
+        } else if (char in bootlegXDict && false) {
             flipArr = bootlegXDict[char][0]
             x_coords = bootlegXDict[char][1]
 
@@ -161,8 +169,26 @@ setInterval( function() {
             ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         } else {
-            // theoretically this should never happen, but you can never be too sure
-            continue;
+            //canvas.width = canvas.width + 1;
+            if (!cheatingMode) {
+                continue;
+            }
+            
+            cheatPadding = 1/2
+
+            ctx.save()
+            
+            canvas.retinaResolutionEnabled = false;
+            ctx.font = '5px arial';
+            ctx.transform(8, 0, 0, 6, 0, 0);
+
+            
+
+            width = ctx.measureText(char).width + cheatPadding*2;
+            
+            ctx.fillText(char, totalWidth + cheatPadding, 6);
+
+            ctx.restore();
         }
 
         totalWidth += width;
