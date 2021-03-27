@@ -70,6 +70,9 @@ for (const property in masterXDict) {
     masterXDict[property] = masterXDict[property][rand]
 }
 
+let pastMsg = "";
+
+// a function that gets the width of the current susmsg
 function getWidth(susMsg) {
     let totalWidth = 0;
 
@@ -103,6 +106,15 @@ function getCharImage(char) {
 
 setInterval( function() {  
     susMsg = susInput.value;
+
+    // exit function if we dont need to update the canvas
+    if (pastMsg == susMsg) {
+        return;
+    } else {
+        pastMsg = susMsg;
+    }
+
+    // if theres no value there then just make it the default image
     if (!susMsg) {
         canvas.width = templateImage.width;
         canvas.height = templateImage.height;
@@ -117,11 +129,9 @@ setInterval( function() {
     susMsg = susMsg.split("");
 
     cheatingMode = cheatBox.checked;
-    cheatingMode = true;
     cypherMode = cypherBox.checked;
 
     // yell at user for using bad letters
-    
     let processedMsg = [];
     let unknownLetters = [];
 
@@ -147,17 +157,19 @@ setInterval( function() {
 
     canvas.width = totalWidth;
 
-    // make it
+    // draw it to the canvas
     totalWidth = 0;
     width = 0;
     let flipArr = [];
     for (const char of susMsg ) {
         if (char in masterXDict) {
+            // normal default characters
             x_coords = masterXDict[char]
             width = x_coords[1] - x_coords[0]
 
             ctx.drawImage(templateImage, x_coords[0], 0, width, canvas.height, totalWidth, 0 , width, canvas.height);
         } else if (char in bootlegXDict) {
+            // drawing bootleg characters (chars that you can get to by flipping default chars)
             flipArr = bootlegXDict[char][0]
             x_coords = bootlegXDict[char][1]
 
@@ -188,21 +200,26 @@ setInterval( function() {
             ctx.setTransform(1, 0, 0, 1, 0, 0);
 
         } else {
-            //canvas.width = canvas.width + 1;
+            // cheating mode
             if (!cheatingMode) {
                 continue;
             }
-
+            
+            // draw the letter
             values = getCharImage(char);
             image = values[0];
             genWidth = values[1];
             width = genWidth*1.5 + 2;
-            ctx.drawImage(image, 0, 0, width, 15, totalWidth, 0, genWidth*3, 20);   
-        }
+            ctx.drawImage(image, 0, 0, width, 15, totalWidth, 0, genWidth*3, 20);
 
+            //draw the face sliver
+            randX = Math.floor(Math.random() * Math.floor(320-width));
+            ctx.drawImage(templateImage, randX, yCoordSplit, width, canvas.height-yCoordSplit, totalWidth, yCoordSplit, width, canvas.height-yCoordSplit);
+        }
+    
         totalWidth += width;
     }
-}, 60);
+}, 100);
 
 function show_cheating() {
 	document.getElementById("options-help-cheating").style.display = "flex";
