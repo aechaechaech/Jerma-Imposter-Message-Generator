@@ -38,6 +38,12 @@ const cheatBox = document.getElementById("cheating");
 const canvas = document.getElementById("sustext");
 const ctx = canvas.getContext("2d");
 
+const crispTextCanvas = document.getElementById("lilstupidasstextcanvas");
+const crispCtx = crispTextCanvas.getContext("2d");
+crispTextCanvas.width = 30;
+crispTextCanvas.height = 30;
+crispCtx.canvas.hidden = true;
+
 const susInput = document.getElementById("susInput");
 const errorOutput = document.getElementById("dumbassAlert");
 
@@ -79,6 +85,20 @@ function getWidth(susMsg) {
     }
 
     return totalWidth;
+}
+
+function getCharImage(char) { 
+    crispCtx.clearRect(0,0,1000,1000);
+
+    crispCtx.textAlign = "center";
+    crispCtx.fillStyle = "black";
+    crispCtx.font = 'bold 11px Arial';
+    crispCtx.fillText(char, 5, 10);
+
+    retImage = new Image();
+    retImage.src = crispTextCanvas.toDataURL("image/png");
+
+    return [retImage, crispCtx.measureText(char).width];
 }
 
 setInterval( function() {  
@@ -123,22 +143,21 @@ setInterval( function() {
     let totalWidth = getWidth(susMsg);
 
     const newWidth = (50*totalWidth)/320;
-    //canvas.style.width = `${newWidth}%`;
+    canvas.style.width = `${newWidth}%`;
 
     canvas.width = totalWidth;
-    canvas.width = 320;
 
     // make it
     totalWidth = 0;
     width = 0;
     let flipArr = [];
     for (const char of susMsg ) {
-        if (char in masterXDict && false) {
+        if (char in masterXDict) {
             x_coords = masterXDict[char]
             width = x_coords[1] - x_coords[0]
 
             ctx.drawImage(templateImage, x_coords[0], 0, width, canvas.height, totalWidth, 0 , width, canvas.height);
-        } else if (char in bootlegXDict && false) {
+        } else if (char in bootlegXDict) {
             flipArr = bootlegXDict[char][0]
             x_coords = bootlegXDict[char][1]
 
@@ -173,22 +192,13 @@ setInterval( function() {
             if (!cheatingMode) {
                 continue;
             }
-            
-            cheatPadding = 1/2
 
-            ctx.save()
-            
-            canvas.retinaResolutionEnabled = false;
-            ctx.font = '5px arial';
-            ctx.transform(8, 0, 0, 6, 0, 0);
+            values = getCharImage(char);
+            image = values[0]
+            genWidth = values[1]
+            ctx.drawImage(image, 0, 0, 15, 15, totalWidth, 0, 25, 20);
 
-            
-
-            width = ctx.measureText(char).width + cheatPadding*2;
-            
-            ctx.fillText(char, totalWidth + cheatPadding, 6);
-
-            ctx.restore();
+            width = 14;
         }
 
         totalWidth += width;
