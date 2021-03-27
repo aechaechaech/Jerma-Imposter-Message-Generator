@@ -42,6 +42,9 @@ const crispTextCanvas = document.getElementById("lilstupidasstextcanvas");
 const crispCtx = crispTextCanvas.getContext("2d");
 crispTextCanvas.width = 30;
 crispTextCanvas.height = 30;
+crispCtx.textAlign = "center";
+crispCtx.fillStyle = "black";
+crispCtx.font = 'bold 11px Arial';
 crispCtx.canvas.hidden = true;
 
 const susInput = document.getElementById("susInput");
@@ -74,14 +77,14 @@ function getWidth(susMsg) {
         let x_choords;
 
         if (char in masterXDict) {
-            x_coords = masterXDict[char]
+            x_coords = masterXDict[char];
+            totalWidth += x_coords[1] - x_coords[0];
         } else if (char in bootlegXDict) {
-            x_coords = bootlegXDict[char][1]
+            x_coords = bootlegXDict[char][1];
+            totalWidth += x_coords[1] - x_coords[0];
         } else {
-            continue;
+            totalWidth += crispCtx.measureText(char).width * 1.5 + 2;
         }
-
-        totalWidth += x_coords[1] - x_coords[0];
     }
 
     return totalWidth;
@@ -90,10 +93,7 @@ function getWidth(susMsg) {
 function getCharImage(char) { 
     crispCtx.clearRect(0,0,1000,1000);
 
-    crispCtx.textAlign = "center";
-    crispCtx.fillStyle = "black";
-    crispCtx.font = 'bold 11px Arial';
-    crispCtx.fillText(char, 5, 10);
+    crispCtx.fillText(char, 3.5, 10);
 
     retImage = new Image();
     retImage.src = crispTextCanvas.toDataURL("image/png");
@@ -194,11 +194,10 @@ setInterval( function() {
             }
 
             values = getCharImage(char);
-            image = values[0]
-            genWidth = values[1]
-            ctx.drawImage(image, 0, 0, 15, 15, totalWidth, 0, 25, 20);
-
-            width = 14;
+            image = values[0];
+            genWidth = values[1];
+            width = genWidth*1.5 + 2;
+            ctx.drawImage(image, 0, 0, width, 15, totalWidth, 0, genWidth*3, 20);   
         }
 
         totalWidth += width;
