@@ -47,6 +47,8 @@ crispCtx.fillStyle = "black";
 crispCtx.font = 'bold 11px Arial';
 crispCtx.canvas.hidden = true;
 
+const cypherCanvas = document.createElement('canvas');
+
 const susInput = document.getElementById("susInput");
 const errorOutput = document.getElementById("dumbassAlert");
 
@@ -70,7 +72,7 @@ for (const property in masterXDict) {
     masterXDict[property] = masterXDict[property][rand]
 }
 
-let pastMsg = "";
+let pastData = ["", cypherMode, cheatingMode];
 
 // a function that gets the width of the current susmsg
 function getWidth(susMsg) {
@@ -85,7 +87,7 @@ function getWidth(susMsg) {
         } else if (char in bootlegXDict) {
             x_coords = bootlegXDict[char][1];
             totalWidth += x_coords[1] - x_coords[0];
-        } else {
+        } else if (cheatingMode) {
             totalWidth += crispCtx.measureText(char).width * 1.5 + 2;
         }
     }
@@ -94,25 +96,32 @@ function getWidth(susMsg) {
 }
 
 function getCharImage(char) { 
-    crispCtx.clearRect(0,0,1000,1000);
+    crispCtx.fillStyle = "white";
+    crispCtx.fillRect(0,0,1000,1000);
 
+    crispCtx.fillStyle = "black";
     crispCtx.fillText(char, 3.5, 10);
 
     retImage = new Image();
-    retImage.src = crispTextCanvas.toDataURL("image/png");
+    retImage.src = crispTextCanvas.toDataURL("image/jpeg", .5);
 
     return [retImage, crispCtx.measureText(char).width];
 }
 
 setInterval( function() {  
     susMsg = susInput.value;
+    cheatingMode = cheatBox.checked;
+    cypherMode = cypherBox.checked;
 
     // exit function if we dont need to update the canvas
-    if (pastMsg == susMsg) {
+    if (susMsg == pastData[0] && cypherMode == pastData[1] && cheatingMode == pastData[2]) {
         return;
     } else {
-        pastMsg = susMsg;
+        pastData = [susMsg, cypherMode, cheatingMode]
+        console.log("asjhdbasjd")
     }
+
+    canvas.height = templateImage.height;
 
     // if theres no value there then just make it the default image
     if (!susMsg) {
@@ -127,9 +136,6 @@ setInterval( function() {
 
     susMsg = susMsg.toLowerCase();
     susMsg = susMsg.split("");
-
-    cheatingMode = cheatBox.checked;
-    cypherMode = cypherBox.checked;
 
     // yell at user for using bad letters
     let processedMsg = [];
@@ -219,6 +225,18 @@ setInterval( function() {
     
         totalWidth += width;
     }
+
+    if (cypherMode) {
+        cypherCanvas.width = canvas.width;
+        cypherCanvas.height = templateImage.height - yCoordSplit;
+
+        cypherCanvas.getContext("2d").drawImage(canvas, 0, -yCoordSplit);
+        
+        canvas.height = cypherCanvas.height;
+
+        ctx.drawImage(cypherCanvas, 0, 0, cypherCanvas.width, cypherCanvas.height, 0, 0, canvas.width, cypherCanvas.height);
+    }
+    
 }, 100);
 
 function show_cheating() {
