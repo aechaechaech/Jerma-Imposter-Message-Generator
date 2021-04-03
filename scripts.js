@@ -205,6 +205,11 @@ setInterval( function() {
 
             ctx.setTransform(1, 0, 0, 1, 0, 0);
 
+            if (char == "a") {
+                ctx.fillStyle = "white";
+                ctx.fillRect(totalWidth + 7, 13, 3, 3)
+            }
+
         } else {
             // cheating mode
             if (!cheatingMode) {
@@ -236,7 +241,6 @@ setInterval( function() {
 
         ctx.drawImage(cypherCanvas, 0, 0, cypherCanvas.width, cypherCanvas.height, 0, 0, canvas.width, cypherCanvas.height);
     }
-    
 }, 100);
 
 function show_cheating() {
